@@ -769,8 +769,8 @@ static void bbr_update_min_rtt(struct sock *sk, const struct rate_sample *rs)
 			if (bbr->round_start)
 				bbr->probe_rtt_round_done = 1;
 			if (bbr->probe_rtt_round_done &&
-			    after(tcp_time_stamp, bbr->probe_rtt_done_stamp)) {
-				bbr->min_rtt_stamp = tcp_time_stamp;
+			    after(tcp_jiffies32, bbr->probe_rtt_done_stamp)) {
+				bbr->min_rtt_stamp = tcp_jiffies32;
 				bbr->restore_cwnd = 1;  /* snap to prior_cwnd */
 				bbr_reset_mode(sk);
 			}
