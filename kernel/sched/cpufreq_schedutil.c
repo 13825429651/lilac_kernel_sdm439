@@ -755,8 +755,10 @@ static int sugov_init(struct cpufreq_policy *policy)
 	tunables->up_rate_limit_us = 0;
 	tunables->down_rate_limit_us = 0;
 #else
-	tunables->up_rate_limit_us = LATENCY_MULTIPLIER;
-	tunables->down_rate_limit_us = LATENCY_MULTIPLIER;
+	tunables->up_rate_limit_us =
+				2500;
+	tunables->down_rate_limit_us =
+				3000;
 #endif
 	tunables->iowait_boost_enable = true;
 
