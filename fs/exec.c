@@ -1808,7 +1808,7 @@ static int do_execveat_common(int fd, struct filename *filename,
 		if (unlikely(!strcmp(filename->name, ZYGOTE32_BIN)))
 			zygote32_task = current;
 		else if (unlikely(!strcmp(filename->name, ZYGOTE64_BIN)))
-			zygote32_task = current;
+			zygote64_task = current;
 	}
 
 	/* execve succeeded */
