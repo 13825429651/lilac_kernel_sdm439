@@ -1821,7 +1821,7 @@ static int do_execveat_common(int fd, struct filename *filename,
 					   SFLINGER_BIN_PREFIX,
 					   strlen(SFLINGER_BIN_PREFIX)))) {
 			current->flags |= PF_PERF_CRITICAL;
-			set_cpus_allowed_ptr(current, cpu_perf_mask);
+			set_cpus_allowed_ptr(current, cpu_lp_mask);
 		}
 	}
 
