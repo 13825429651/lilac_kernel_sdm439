@@ -181,7 +181,7 @@ static int low_distort_amp = 0;
 module_param(low_distort_amp, int, 0644);
 MODULE_PARM_DESC(low_distort_amp, "enable/disable l Class AB Mode");
 
-static int dig_core_collapse_enable = 1;
+static int dig_core_collapse_enable = 0;
 module_param(dig_core_collapse_enable, int, 0664);
 MODULE_PARM_DESC(dig_core_collapse_enable, "enable/disable power gating");
 
@@ -191,7 +191,7 @@ module_param(dig_core_collapse_timer, int, 0664);
 MODULE_PARM_DESC(dig_core_collapse_timer, "timer for power gating");
 
 /* SVS Scaling enable/disable */
-static int svs_scaling_enabled = 1;
+static int svs_scaling_enabled = 0;
 module_param(svs_scaling_enabled, int, 0664);
 MODULE_PARM_DESC(svs_scaling_enabled, "enable/disable svs scaling");
 
