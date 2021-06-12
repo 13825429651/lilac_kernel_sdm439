@@ -271,7 +271,8 @@ static void msm_pcm_routng_cfg_matrix_map_pp(struct route_payload payload,
 	int itr = 0, rc = 0;
 
 	if ((path_type == ADM_PATH_PLAYBACK) &&
-	    (perf_mode == LEGACY_PCM_MODE) &&
+	    ((perf_mode == LEGACY_PCM_MODE) ||
+	     (perf_mode == LOW_LATENCY_PCM_MODE)) &&
 	    is_custom_stereo_on) {
 		for (itr = 0; itr < payload.num_copps; itr++) {
 			if ((payload.port_id[itr] != SLIMBUS_0_RX) &&
@@ -1171,6 +1172,7 @@ void msm_pcm_routing_reg_psthr_stream(int fedai_id, int dspst_id,
 {
 	int i, session_type, path_type, port_type;
 	u32 mode = 0;
+	bool is_copp_24bit = false;
 
 	if (fedai_id > MSM_FRONTEND_DAI_MM_MAX_ID) {
 		/* bad ID assigned in machine driver */
@@ -1532,6 +1534,8 @@ int msm_pcm_routing_reg_phy_stream(int fedai_id, int perf_mode,
 
 			bits_per_sample = msm_routing_get_bit_width(
 						msm_bedais[i].format);
+			if (bits_per_sample == 24)
+				is_copp_24bit = true;
 
 			app_type =
 			fe_dai_app_type_cfg[fedai_id][session_type][i].app_type;
@@ -1546,6 +1550,11 @@ int msm_pcm_routing_reg_phy_stream(int fedai_id, int perf_mode,
 			} else
 				sample_rate = msm_bedais[i].sample_rate;
 
+			if (path_type == 2) {
+				if (is_copp_24bit == true)
+					bits_per_sample = 24;
+			}
+			
 			acdb_dev_id =
 			fe_dai_app_type_cfg[fedai_id][session_type][i]
 				.acdb_dev_id;
@@ -1721,6 +1730,7 @@ static void msm_pcm_routing_process_audio(u16 reg, u16 val, int set)
 	struct msm_pcm_routing_fdai_data *fdai;
 	uint32_t passthr_mode;
 	bool is_lsm;
+	bool is_copp_24bit = false;
 
 	pr_debug("%s: reg %x val %x set %x\n", __func__, reg, val, set);
 
@@ -1790,6 +1800,9 @@ static void msm_pcm_routing_process_audio(u16 reg, u16 val, int set)
 
 			bits_per_sample = msm_routing_get_bit_width(
 						msm_bedais[reg].format);
+						
+			if (bits_per_sample == 24)
+				is_copp_24bit = true;
 
 			app_type =
 			fe_dai_app_type_cfg[val][session_type][reg].app_type;
@@ -1812,6 +1825,11 @@ static void msm_pcm_routing_process_audio(u16 reg, u16 val, int set)
 			} else
 				sample_rate = msm_bedais[reg].sample_rate;
 
+			if (path_type == 2) {
+				if (is_copp_24bit == true)
+					bits_per_sample = 24;
+			}
+			
 			topology = msm_routing_get_adm_topology(val,
 								session_type,
 								reg);
