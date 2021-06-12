@@ -6131,11 +6131,6 @@ static const char * const cf_text[] = {
 	"CF_NEG_3DB_4HZ", "CF_NEG_3DB_75HZ", "CF_NEG_3DB_150HZ"
 };
 
-static const char * const rx_cf_text[] = {
-	"CF_NEG_3DB_4HZ", "CF_NEG_3DB_75HZ", "CF_NEG_3DB_150HZ",
-	"CF_NEG_3DB_0P48HZ"
-};
-
 static const char * const amic_pwr_lvl_text[] = {
 	"LOW_PWR", "DEFAULT", "HIGH_PERF", "HYBRID"
 };
@@ -6170,52 +6165,6 @@ static SOC_ENUM_SINGLE_EXT_DECL(tavil_spkr_boost_stage_enum,
 static SOC_ENUM_SINGLE_EXT_DECL(amic_pwr_lvl_enum, amic_pwr_lvl_text);
 static SOC_ENUM_SINGLE_EXT_DECL(hph_idle_detect_enum, hph_idle_detect_text);
 static SOC_ENUM_SINGLE_EXT_DECL(asrc_mode_enum, asrc_mode_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec0_enum, WCD934X_CDC_TX0_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec1_enum, WCD934X_CDC_TX1_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec2_enum, WCD934X_CDC_TX2_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec3_enum, WCD934X_CDC_TX3_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec4_enum, WCD934X_CDC_TX4_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec5_enum, WCD934X_CDC_TX5_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec6_enum, WCD934X_CDC_TX6_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec7_enum, WCD934X_CDC_TX7_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_dec8_enum, WCD934X_CDC_TX8_TX_PATH_CFG0, 5,
-							cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int0_1_enum, WCD934X_CDC_RX0_RX_PATH_CFG2, 0,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int0_2_enum, WCD934X_CDC_RX0_RX_PATH_MIX_CFG, 2,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int1_1_enum, WCD934X_CDC_RX1_RX_PATH_CFG2, 0,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int1_2_enum, WCD934X_CDC_RX1_RX_PATH_MIX_CFG, 2,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int2_1_enum, WCD934X_CDC_RX2_RX_PATH_CFG2, 0,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int2_2_enum, WCD934X_CDC_RX2_RX_PATH_MIX_CFG, 2,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int3_1_enum, WCD934X_CDC_RX3_RX_PATH_CFG2, 0,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int3_2_enum, WCD934X_CDC_RX3_RX_PATH_MIX_CFG, 2,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int4_1_enum, WCD934X_CDC_RX4_RX_PATH_CFG2, 0,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int4_2_enum, WCD934X_CDC_RX4_RX_PATH_MIX_CFG, 2,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int7_1_enum, WCD934X_CDC_RX7_RX_PATH_CFG2, 0,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int7_2_enum, WCD934X_CDC_RX7_RX_PATH_MIX_CFG, 2,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int8_1_enum, WCD934X_CDC_RX8_RX_PATH_CFG2, 0,
-							rx_cf_text);
-static SOC_ENUM_SINGLE_DECL(cf_int8_2_enum, WCD934X_CDC_RX8_RX_PATH_MIX_CFG, 2,
-							rx_cf_text);
 
 static const struct snd_kcontrol_new tavil_snd_controls[] = {
 	SOC_ENUM_EXT("EAR PA Gain", tavil_ear_pa_gain_enum,
@@ -6319,31 +6268,6 @@ static const struct snd_kcontrol_new tavil_snd_controls[] = {
 
 	SOC_ENUM_EXT("CLK MODE", tavil_clkmode_enum, tavil_get_clkmode,
 		     tavil_put_clkmode),
-
-	SOC_ENUM("TX0 HPF cut off", cf_dec0_enum),
-	SOC_ENUM("TX1 HPF cut off", cf_dec1_enum),
-	SOC_ENUM("TX2 HPF cut off", cf_dec2_enum),
-	SOC_ENUM("TX3 HPF cut off", cf_dec3_enum),
-	SOC_ENUM("TX4 HPF cut off", cf_dec4_enum),
-	SOC_ENUM("TX5 HPF cut off", cf_dec5_enum),
-	SOC_ENUM("TX6 HPF cut off", cf_dec6_enum),
-	SOC_ENUM("TX7 HPF cut off", cf_dec7_enum),
-	SOC_ENUM("TX8 HPF cut off", cf_dec8_enum),
-
-	SOC_ENUM("RX INT0_1 HPF cut off", cf_int0_1_enum),
-	SOC_ENUM("RX INT0_2 HPF cut off", cf_int0_2_enum),
-	SOC_ENUM("RX INT1_1 HPF cut off", cf_int1_1_enum),
-	SOC_ENUM("RX INT1_2 HPF cut off", cf_int1_2_enum),
-	SOC_ENUM("RX INT2_1 HPF cut off", cf_int2_1_enum),
-	SOC_ENUM("RX INT2_2 HPF cut off", cf_int2_2_enum),
-	SOC_ENUM("RX INT3_1 HPF cut off", cf_int3_1_enum),
-	SOC_ENUM("RX INT3_2 HPF cut off", cf_int3_2_enum),
-	SOC_ENUM("RX INT4_1 HPF cut off", cf_int4_1_enum),
-	SOC_ENUM("RX INT4_2 HPF cut off", cf_int4_2_enum),
-	SOC_ENUM("RX INT7_1 HPF cut off", cf_int7_1_enum),
-	SOC_ENUM("RX INT7_2 HPF cut off", cf_int7_2_enum),
-	SOC_ENUM("RX INT8_1 HPF cut off", cf_int8_1_enum),
-	SOC_ENUM("RX INT8_2 HPF cut off", cf_int8_2_enum),
 
 	SOC_ENUM_EXT("RX HPH Mode", rx_hph_mode_mux_enum,
 		tavil_rx_hph_mode_get, tavil_rx_hph_mode_put),
@@ -9367,15 +9291,6 @@ static const struct tavil_reg_mask_val tavil_codec_reg_defaults[] = {
 	{WCD934X_CDC_BOOST1_BOOST_CFG1, 0x3F, 0x12},
 	{WCD934X_CDC_BOOST1_BOOST_CFG2, 0x1C, 0x08},
 	{WCD934X_CPE_SS_CPARMAD_BUFRDY_INT_PERIOD, 0x1F, 0x09},
-	{WCD934X_CDC_TX0_TX_PATH_CFG1, 0x01, 0x00},
-	{WCD934X_CDC_TX1_TX_PATH_CFG1, 0x01, 0x00},
-	{WCD934X_CDC_TX2_TX_PATH_CFG1, 0x01, 0x00},
-	{WCD934X_CDC_TX3_TX_PATH_CFG1, 0x01, 0x00},
-	{WCD934X_CDC_TX4_TX_PATH_CFG1, 0x01, 0x00},
-	{WCD934X_CDC_TX5_TX_PATH_CFG1, 0x01, 0x00},
-	{WCD934X_CDC_TX6_TX_PATH_CFG1, 0x01, 0x00},
-	{WCD934X_CDC_TX7_TX_PATH_CFG1, 0x01, 0x00},
-	{WCD934X_CDC_TX8_TX_PATH_CFG1, 0x01, 0x00},
 	{WCD934X_RX_OCP_CTL, 0x0F, 0x02}, /* OCP number of attempts is 2 */
 	{WCD934X_HPH_OCP_CTL, 0xFF, 0x3A}, /* OCP current limit */
 	{WCD934X_HPH_L_TEST, 0x01, 0x01},
