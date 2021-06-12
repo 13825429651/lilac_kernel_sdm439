@@ -4640,7 +4640,7 @@ static int tasha_codec_ear_dac_event(struct snd_soc_dapm_widget *w,
 				wcd_clsh_fsm(codec, &tasha->clsh_d,
 					WCD_CLSH_EVENT_PRE_DAC,
 					WCD_CLSH_STATE_EAR,
-					CLS_H_NORMAL);
+					CLS_AB);
 			}
 			else {
 				wcd_clsh_fsm(codec, &tasha->clsh_d,
@@ -4671,7 +4671,7 @@ static int tasha_codec_ear_dac_event(struct snd_soc_dapm_widget *w,
 				wcd_clsh_fsm(codec, &tasha->clsh_d,
 					WCD_CLSH_EVENT_POST_PA,
 					WCD_CLSH_STATE_EAR,
-					CLS_H_NORMAL);
+					CLS_AB);
 			}
 			else {
 				wcd_clsh_fsm(codec, &tasha->clsh_d,
@@ -13583,7 +13583,7 @@ static int tasha_codec_probe(struct snd_soc_codec *codec)
 	/* Class-H Init*/
 	wcd_clsh_init(&tasha->clsh_d);
 	/* Default HPH Mode to Class-H HiFi */
-	tasha->hph_mode = CLS_H_HIFI;
+	tasha->hph_mode = CLS_AB;
 
 	tasha->codec = codec;
 	for (i = 0; i < COMPANDER_MAX; i++)
