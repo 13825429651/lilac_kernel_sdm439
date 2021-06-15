@@ -177,7 +177,7 @@ static int huwifi_mode = 1;
 module_param(huwifi_mode, int, 0644);
 MODULE_PARM_DESC(huwifi_mode, "enable/disable l UHQA Mode");
 
-static int low_distort_amp = 0;
+static int low_distort_amp = 1;
 module_param(low_distort_amp, int, 0644);
 MODULE_PARM_DESC(low_distort_amp, "enable/disable l Class AB Mode");
 
