@@ -212,7 +212,7 @@ static struct afe_param_slimbus_slave_port_cfg tasha_slimbus_slave_port_cfg = {
 	.slimbus_dev_id = AFE_SLIMBUS_DEVICE_1,
 	.slave_dev_pgd_la = 0,
 	.slave_dev_intfdev_la = 0,
-	.bit_width = 16,
+	.bit_width = 24,
 	.data_format = 0,
 	.num_channels = 1
 };
@@ -11518,7 +11518,7 @@ static int tasha_hw_params(struct snd_pcm_substream *substream,
 		}
 		switch (params_width(params)) {
 		case 16:
-			tasha->dai[dai->id].bit_width = 16;
+			tasha->dai[dai->id].bit_width = 24;
 			i2s_bit_mode = 0x01;
 			break;
 		case 24:
@@ -11609,7 +11609,7 @@ static int tasha_hw_params(struct snd_pcm_substream *substream,
 		tasha->dai[dai->id].rate = params_rate(params);
 		switch (params_width(params)) {
 		case 16:
-			tasha->dai[dai->id].bit_width = 16;
+			tasha->dai[dai->id].bit_width = 24;
 			i2s_bit_mode = 0x01;
 			break;
 		case 24:
