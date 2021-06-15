@@ -18,10 +18,12 @@
 *.so
 *.so.dbg
 *.mod.c
+*.i
 *.lst
 *.symtypes
 *.order
 *.elf
+*.bin
 *.tar
 *.gz
 *.bz2
@@ -32,6 +34,8 @@
 *.patch
 *.gcno
 *.ll
+*.img
+*.gz-dtb
 modules.builtin
 Module.symvers
 *.dwo
@@ -121,3 +125,16 @@ kernel/configs/android-*.cfg
 #Ignoring Android.bp link file
 #
 Android.bp
+
+# Personal stuff
+/aarch64-linux-android-4.9
+/aosp-clang-master
+/arm-linux-androideabi-4.9
+/build
+/out
+build.sh
+*.zip
+/clang
+/AnyKernel3
+/gcc
+/gcc32
