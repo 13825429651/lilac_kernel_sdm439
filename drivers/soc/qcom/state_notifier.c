@@ -33,7 +33,7 @@ static unsigned int suspend_defer_time = DEFAULT_SUSPEND_DEFER_TIME;
 module_param_named(suspend_defer_time, suspend_defer_time, uint, 0664);
 static struct delayed_work suspend_work;
 static struct workqueue_struct *susp_wq;
-struct work_struct resume_work;
+struct work_struct qresume_work;
 struct work_struct boost_work;
 bool state_suspended;
 module_param_named(state_suspended, state_suspended, bool, 0444);
@@ -114,7 +114,7 @@ void state_resume(void)
 	suspend_in_progress = false;
 
 	if (state_suspended)
-		queue_work(susp_wq, &resume_work);
+		queue_work(susp_wq, &qresume_work);
 }
 
 void state_boost(void)
@@ -137,7 +137,7 @@ static int __init state_notifier_init(void)
 		pr_err("State Notifier failed to allocate suspend workqueue\n");
 
 	INIT_DELAYED_WORK(&suspend_work, _suspend_work);
-	INIT_WORK(&resume_work, _resume_work);
+	INIT_WORK(&qresume_work, _resume_work);
 	INIT_WORK(&boost_work, _boost_work);
 
 	return 0;
