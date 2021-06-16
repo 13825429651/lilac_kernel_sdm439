@@ -55,6 +55,7 @@
 #include <linux/t10-pi.h>
 #include <asm/uaccess.h>
 #include <asm/unaligned.h>
+#include <linux/backing-dev.h>
 
 #include <scsi/scsi.h>
 #include <scsi/scsi_cmnd.h>
@@ -3091,6 +3092,30 @@ static int sd_probe(struct device *dev)
 					     SD_MOD_TIMEOUT);
 	}
 
+	if (1) { /* apply to all SCSI devices on non-UFS system */
+		struct request_queue *q = sdp->request_queue;
+
+		/* decrease max # of requests to 32. The goal of this tunning is
+		 * reducing the time for draining elevator when elevator_switch
+		 * function is called. It is effective for slow USB memory. 
+		 */
+		q->nr_requests = BLKDEV_MAX_RQ / 8;
+		if (q->nr_requests < 4) q->nr_requests = 32;
+
+		/* apply more throttle on non-ufs scsi device */
+		q->backing_dev_info->capabilities |= BDI_CAP_STRICTLIMIT;
+		bdi_set_min_ratio(q->backing_dev_info, 30);
+		bdi_set_max_ratio(q->backing_dev_info, 60);
+
+		pr_info("Parameters for SCSI-dev(%s): min/max_ratio: %u/%u "
+			"strictlimit: on nr_requests: %lu read_ahead_kb: %lu\n",
+			gd->disk_name,
+			q->backing_dev_info->min_ratio,
+			q->backing_dev_info->max_ratio,
+			q->nr_requests,
+			q->backing_dev_info->ra_pages * 4);
+	}
+	
 	device_initialize(&sdkp->dev);
 	sdkp->dev.parent = dev;
 	sdkp->dev.class = &sd_disk_class;
@@ -3137,6 +3162,15 @@ static int sd_remove(struct device *dev)
 	struct scsi_disk *sdkp;
 	dev_t devt;
 
+	struct scsi_device *sdp;
+
+	/* restore bdi min/max ratio before device removal */
+	sdp = to_scsi_device(dev);
+	if (sdp && sdp->request_queue) {
+		bdi_set_min_ratio(sdp->request_queue->backing_dev_info, 0);
+		bdi_set_max_ratio(sdp->request_queue->backing_dev_info, 100);
+	}
+	
 	sdkp = dev_get_drvdata(dev);
 	devt = disk_devt(sdkp->disk);
 	scsi_autopm_get_device(sdkp->device);
