@@ -12,8 +12,6 @@ struct target_nrg {
 	struct reciprocal_value rdiv;
 };
 
-#ifdef CONFIG_CGROUP_SCHEDTUNE
-
 int schedtune_cpu_boost(int cpu);
 int schedtune_task_boost(struct task_struct *tsk);
 int schedtune_task_boost_rcu_locked(struct task_struct *tsk);
@@ -25,8 +23,6 @@ void schedtune_exit_task(struct task_struct *tsk);
 void schedtune_enqueue_task(struct task_struct *p, int cpu);
 void schedtune_dequeue_task(struct task_struct *p, int cpu);
 
-#else /* CONFIG_CGROUP_SCHEDTUNE */
-
 #define schedtune_cpu_boost(cpu)  get_sysctl_sched_cfs_boost()
 #define schedtune_task_boost(tsk) get_sysctl_sched_cfs_boost()
 #define schedtune_prefer_idle(tsk) 0
@@ -35,8 +31,6 @@ void schedtune_dequeue_task(struct task_struct *p, int cpu);
 
 #define schedtune_enqueue_task(task, cpu) do { } while (0)
 #define schedtune_dequeue_task(task, cpu) do { } while (0)
-
-#endif /* CONFIG_CGROUP_SCHEDTUNE */
 
 int schedtune_normalize_energy(int energy);
 int schedtune_accept_deltas(int nrg_delta, int cap_delta,
