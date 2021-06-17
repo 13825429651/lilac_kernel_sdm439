@@ -18,7 +18,6 @@
 #include <linux/dma-mapping.h>
 #include <linux/bitops.h>
 #include <linux/delay.h>
-#include <linux/backing-dev.h>
 
 #include <linux/mmc/card.h>
 #include <linux/mmc/host.h>
@@ -364,27 +363,6 @@ int mmc_init_queue(struct mmc_queue *mq, struct mmc_card *card,
 						 host->index,
 						 subname ? subname : "");
 			
-			if (mmc_card_sd(card)) {
-				/* decrease max # of requests to 32. The goal of this tunning is
-		 		* reducing the time for draining elevator when elevator_switch
-				 * function is called. It is effective for slow external sdcard.
-				 */
-				mq->queue->nr_requests = BLKDEV_MAX_RQ / 8;
-				if (mq->queue->nr_requests < 4) mq->queue->nr_requests = 32;
-
-				/* apply more throttle on external sdcard */
-				mq->queue->backing_dev_info->capabilities |= BDI_CAP_STRICTLIMIT;
-				bdi_set_min_ratio(mq->queue->backing_dev_info, 30);
-				bdi_set_min_ratio(mq->queue->backing_dev_info, 60);
-
-				pr_info("Parameters for external-sdcard: min/max_ratio: %u/%u "
-				"strictlimit: on nr_requests: %lu read_ahead_kb: %lu\n",
-				mq->queue->backing_dev_info->min_ratio,
-				mq->queue->backing_dev_info->max_ratio,
-				mq->queue->nr_requests,
-				mq->queue->backing_dev_info->ra_pages * 4);
-			}
-			
 			if (IS_ERR(mq->thread)) {
 				pr_err("%s: %d: cmdq: failed to start mmc-cmdqd thread\n",
 						mmc_hostname(card->host), ret);
@@ -558,10 +536,6 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
 
 	/* Then terminate our worker thread */
 	kthread_stop(mq->thread);
-
-	/* Restore bdi min/max ratio before device removal */
-	bdi_set_min_ratio(q->backing_dev_info, 0);
-	bdi_set_max_ratio(q->backing_dev_info, 100);
 	
 	/* Empty the queue */
 	spin_lock_irqsave(q->queue_lock, flags);
