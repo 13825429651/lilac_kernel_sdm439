@@ -795,9 +795,9 @@ static int sugov_init(struct cpufreq_policy *policy)
 	tunables->down_rate_limit_us = 0;
 #else
 	tunables->up_rate_limit_us =
-				2000;
+				2500;
 	tunables->down_rate_limit_us =
-				2000;
+				3000;
 #endif
 	tunables->iowait_boost_enable = true;
 

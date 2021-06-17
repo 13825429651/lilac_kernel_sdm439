@@ -91,7 +91,7 @@ queue_ra_store(struct request_queue *q, const char *page, size_t count)
 		return ret;
 
 	if (!strcmp(current->comm, "init"))
-		ra_kb = 64;
+		ra_kb = 128;
 		
 	q->backing_dev_info->ra_pages = ra_kb >> (PAGE_SHIFT - 10);
 
