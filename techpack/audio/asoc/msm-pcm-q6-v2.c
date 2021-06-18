@@ -524,6 +524,7 @@ static int msm_pcm_capture_prepare(struct snd_pcm_substream *substream)
 			ret = q6asm_open_read_v3(prtd->audio_client,
 				FORMAT_LINEAR_PCM,
 				bits_per_sample);
+		else if (q6core_get_avcs_api_version_per_service(
 				APRV2_IDS_SERVICE_ID_ADSP_ASM_V) >=
 				ADSP_ASM_API_VERSION_V2)
 			ret = q6asm_open_read_v5(prtd->audio_client,
