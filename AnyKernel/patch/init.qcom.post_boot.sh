@@ -134,8 +134,8 @@ echo -6 > /sys/devices/system/cpu/cpu6/sched_load_boost
 echo -6 > /sys/devices/system/cpu/cpu7/sched_load_boost
 
 # EAS scheduler (big.Little cluster related) settings
-echo 80 > /proc/sys/kernel/sched_upmigrate
-echo 20 > /proc/sys/kernel/sched_downmigrate
+echo 93 > /proc/sys/kernel/sched_upmigrate
+echo 83 > /proc/sys/kernel/sched_downmigrate
 
 # Bring up all cores online
 echo 1 > /sys/devices/system/cpu/cpu1/online
