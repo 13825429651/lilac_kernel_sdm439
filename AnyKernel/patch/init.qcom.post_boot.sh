@@ -83,7 +83,7 @@ function configure_memory_parameters() {
     # Set allocstall_threshold to 0 for all targets.
     # Set swappiness to 100 for all targets
     echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
-    echo 120 > /proc/sys/vm/not_swappiness
+    echo 160 > /proc/sys/vm/not_swappiness
 
     # Disable wsf for all targets beacause we are using efk.
     # wsf Range : 1..1000 So set to bare minimum value 1.
@@ -160,7 +160,6 @@ echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/suspend_enabled
 
 # Enable low power modes
 echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
-echo 10 > /sys/module/lpm_levels/parameters/bias_hyst
 
 # Let kernel know our image version/variant/crm_version
 if [ -f /sys/devices/soc0/select_image ]; then
