@@ -2509,6 +2509,16 @@ static inline bool uclamp_boosted(struct task_struct *p)
 {
 	struct cgroup_subsys_state *css = task_css(p, cpuset_cgrp_id);
 	struct task_group *tg;
+	char name_buf[NAME_MAX + 1];
+	int adj = p->signal->oom_score_adj;
+
+	/* We only care about adj == 0 */
+	if (adj != 0)
+		return 0;
+
+	/* Don't touch kthreads */
+	if (p->flags & PF_KTHREAD)
+		return 0;
 
 	if (!css)
 		return false;
@@ -2518,7 +2528,11 @@ static inline bool uclamp_boosted(struct task_struct *p)
 
 	tg = container_of(css, struct task_group, css);
 
-	return tg->boosted;
+	cgroup_name(tg->css.cgroup, name_buf, sizeof(name_buf));
+	if (strncmp(name_buf, "top-app", strlen("top-app"))) {
+		return tg->boosted || ((p->signal->oom_score_adj == 0) && !(p->flags & PF_KTHREAD));
+	} else
+		return tg->boosted;
 }
 #else
 static inline bool uclamp_latency_sensitive(struct task_struct *p)
