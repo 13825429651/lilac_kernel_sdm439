@@ -6513,7 +6513,7 @@ static inline bool task_fits_max(struct task_struct *p, int cpu)
 		return true;
 
 	if ((task_boost_policy(p) == SCHED_BOOST_ON_BIG ||
-		schedtune_task_boost(p) > 0) &&
+		uclamp_boosted(p) > 0) &&
 		is_min_capacity_cpu(cpu))
 		return false;
 
@@ -6584,7 +6584,7 @@ schedtune_cpu_margin(unsigned long util, int cpu)
 static inline long
 schedtune_task_margin(struct task_struct *p)
 {
-	int boost = schedtune_task_boost(p);
+	int boost = uclamp_boosted(p);
 	unsigned long util;
 	long margin;
 
@@ -7270,7 +7270,7 @@ static inline bool
 cpu_is_in_target_set(struct task_struct *p, int cpu)
 {
 	struct root_domain *rd = cpu_rq(cpu)->rd;
-	int first_cpu = (schedtune_task_boost(p)) ?
+	int first_cpu = (uclamp_boosted(p)) ?
 		rd->max_cap_orig_cpu : rd->min_cap_orig_cpu;
 	int next_usable_cpu = cpumask_next(first_cpu - 1, &p->cpus_allowed);
 	return cpu >= next_usable_cpu || next_usable_cpu >= nr_cpu_ids;
@@ -7694,7 +7694,7 @@ static inline int find_best_target(struct task_struct *p, int *backup_cpu,
 	if (target_cpu != -1 && !idle_cpu(target_cpu) &&
 			best_idle_cpu != -1) {
 		curr_tsk = READ_ONCE(cpu_rq(target_cpu)->curr);
-		if (curr_tsk && schedtune_task_boost(curr_tsk)) {
+		if (curr_tsk && uclamp_boosted(curr_tsk)) {
 			target_cpu = best_idle_cpu;
 		}
 	}
@@ -8819,7 +8819,7 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
 	 */
 	if (!env->src_rq->rd->overutilized &&
 		(cpu_capacity(env->dst_cpu) < cpu_capacity(env->src_cpu)) &&
-		(schedtune_task_boost(p) > 0))
+		(uclamp_boosted(p) > 0))
 		return 0;
 
 	if (task_running(env->src_rq, p)) {
