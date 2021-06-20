@@ -54,6 +54,7 @@
 #include <linux/time64.h>
 #include <linux/backing-dev.h>
 #include <linux/sort.h>
+#include <linux/binfmts.h>
 
 #include <asm/uaccess.h>
 #include <linux/atomic.h>
