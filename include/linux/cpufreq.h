@@ -211,6 +211,7 @@ void cpufreq_stats_create_table(struct cpufreq_policy *policy);
 void cpufreq_stats_free_table(struct cpufreq_policy *policy);
 void cpufreq_stats_record_transition(struct cpufreq_policy *policy,
 				     unsigned int new_freq);
+void msm_do_pm_boost(bool do_boost);
 #else
 static inline void cpufreq_stats_create_table(struct cpufreq_policy *policy) { }
 static inline void cpufreq_stats_free_table(struct cpufreq_policy *policy) { }
