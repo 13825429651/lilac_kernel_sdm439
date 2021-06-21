@@ -1514,7 +1514,7 @@ static int _sde_rotator_inline_cleanup(void *handle,
 		/* wait until request is finished */
 		sde_rot_mgr_unlock(rot_dev->mgr);
 		mutex_unlock(&rot_dev->lock);
-		ret = wait_event_timeout(ctx->wait_queue,
+		ret = wait_event_interruptible_timeout(ctx->wait_queue,
 			sde_rotator_is_request_retired(request),
 			msecs_to_jiffies(rot_dev->streamoff_timeout));
 		mutex_lock(&rot_dev->lock);
