@@ -322,7 +322,7 @@ static int lmk_vmpressure_notifier(struct notifier_block *nb,
 	if (pressure >= 95) {
 		other_file = global_node_page_state(NR_FILE_PAGES) -
 			global_node_page_state(NR_SHMEM) -
-			global_page_state(NR_UNEVICTABLE) -
+			global_node_page_state(NR_UNEVICTABLE) -
 			total_swapcache_pages() +
 			other_indirect;
 		other_free = global_page_state(NR_FREE_PAGES);
@@ -337,7 +337,7 @@ static int lmk_vmpressure_notifier(struct notifier_block *nb,
 
 		other_file = global_node_page_state(NR_FILE_PAGES) -
 			global_node_page_state(NR_SHMEM) -
-			global_page_state(NR_UNEVICTABLE) -
+			global_node_page_state(NR_UNEVICTABLE) -
 			total_swapcache_pages() +
 			other_indirect;
 
@@ -662,7 +662,7 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 	other_indirect = global_node_page_state(NR_INDIRECTLY_RECLAIMABLE_BYTES) >>
 			PAGE_SHIFT;
 
-	if (global_page_state(NR_SHMEM) + global_page_state(NR_UNEVICTABLE) + total_swapcache_pages() <
+	if (global_node_page_state(NR_SHMEM) + global_node_page_state(NR_UNEVICTABLE) + total_swapcache_pages() <
 			global_node_page_state(NR_UNEVICTABLE) <
 			global_node_page_state(NR_FILE_PAGES) + other_indirect)
 		other_file = global_node_page_state(NR_FILE_PAGES) -
