@@ -1902,9 +1902,6 @@ submit_and_realloc:
 		bio = NULL;
 	}
 
-	if (pages && is_readahead && !drop_ra)
-			WRITE_ONCE(F2FS_I(inode)->ra_offset, -1);
-			
 	dun = PG_DUN(inode, page);
 	bio_encrypted = f2fs_may_encrypt_bio(inode, NULL);
 	if (!fscrypt_mergeable_bio(bio, dun, bio_encrypted, 0)) {
@@ -1966,7 +1963,6 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
 	struct inode *inode = mapping->host;
 	struct f2fs_map_blocks map;
 	int ret = 0;
-	bool drop_ra = false;
 
 	map.m_pblk = 0;
 	map.m_lblk = 0;
@@ -1977,25 +1973,13 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
 	map.m_seg_type = NO_CHECK_TYPE;
 	map.m_may_create = false;
 
-	/*
-	 * Two readahead threads for same address range can cause race condition
-	 * which fragments sequential read IOs. So let's avoid each other.
-	 */
-	if (pages && is_readahead) {
-		page = list_last_entry(pages, struct page, lru);
-		if (READ_ONCE(F2FS_I(inode)->ra_offset) == page_index(page))
-			drop_ra = true;
-		else
-			WRITE_ONCE(F2FS_I(inode)->ra_offset, page_index(page));
-	}
-	
 	for (; nr_pages; nr_pages--) {
 		if (pages) {
 			page = list_last_entry(pages, struct page, lru);
 
 			prefetchw(&page->flags);
 			list_del(&page->lru);
-			if (drop_ra || add_to_page_cache_lru(page, mapping,
+			if (add_to_page_cache_lru(page, mapping,
 						  page_index(page),
 						  readahead_gfp_mask(mapping)))
 				goto next_page;
