@@ -520,9 +520,9 @@ pref_address:		.quad LOAD_PHYSICAL_ADDR	# preferred load addr
 # need to deal with each of them separately. Please check
 # the description in lib/decompressor_xxx.c for specific information.
 #
-# extra_bytes = (uncompressed_size >> 12) + 65536 + 128
+# extra_bytes = (uncompressed_size >> 12) + 131072 + 128
 
-#define ZO_z_extra_bytes	((ZO_z_output_len >> 12) + 65536 + 128)
+#define ZO_z_extra_bytes	((ZO_z_output_len >> 12) + 131072 + 128)
 #if ZO_z_output_len > ZO_z_input_len
 # define ZO_z_extract_offset	(ZO_z_output_len + ZO_z_extra_bytes - \
 				 ZO_z_input_len)
