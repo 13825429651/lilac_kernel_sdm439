@@ -4,7 +4,7 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=Lilac Kernel For SDM439 series
+kernel.string=
 do.devicecheck=1
 do.modules=1
 do.systemless=0
@@ -84,7 +84,15 @@ if grep -q "pronto_wlan.ko" $wifi_hal; then
 else
     ui_print "No WiFi HAL patching needed."
 fi
+# IORap
+ui_print "Patching system's build.prop..."
+patch_prop /system/build.prop "ro.iorapd.enable" "true"
+patch_prop /system/build.prop "iorapd.perfetto.enable" "true"
+patch_prop /system/build.prop "iorapd.readahead.enable" "true"
 # Replace post_boot with ours.
 ui_print "Pushing init.qcom.post_boot.sh..."
 replace_file "/vendor/bin/init.qcom.post_boot.sh" "0755" "init.qcom.post_boot.sh"
+# Replace msm_irqbalance.conf with ours.
+ui_print "Pushing msm_irqbalance.conf..."
+replace_file "/vendor/etc/msm_irqbalance.conf" "0644" "msm_irqbalance.conf"
 ## end install
