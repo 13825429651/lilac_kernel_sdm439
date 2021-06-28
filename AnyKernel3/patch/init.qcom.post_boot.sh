@@ -74,7 +74,7 @@ function configure_memory_parameters() {
     # Disable adaptive LMK for all targets &
     # use Google default LMK series for all 64-bit targets >=2GB.
     echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-    
+
     # Enable oom_reaper
     if [ -f /sys/module/lowmemorykiller/parameters/oom_reaper ]; then
         echo 1 > /sys/module/lowmemorykiller/parameters/oom_reaper
@@ -133,9 +133,18 @@ echo -6 > /sys/devices/system/cpu/cpu5/sched_load_boost
 echo -6 > /sys/devices/system/cpu/cpu6/sched_load_boost
 echo -6 > /sys/devices/system/cpu/cpu7/sched_load_boost
 
-# EAS scheduler (big.Little cluster related) settings
-echo 93 > /proc/sys/kernel/sched_upmigrate
-echo 83 > /proc/sys/kernel/sched_downmigrate
+# Set the default IRQ affinity to the silver cluster.
+echo 0f > /proc/irq/default_smp_affinity
+    
+# Setting b.L scheduler parameters (perform it twice)
+echo 65 > /proc/sys/kernel/sched_downmigrate
+echo 71 > /proc/sys/kernel/sched_upmigrate
+echo 65 > /proc/sys/kernel/sched_downmigrate
+echo 71 > /proc/sys/kernel/sched_upmigrate
+echo 85 > /proc/sys/kernel/sched_group_downmigrate
+echo 100 > /proc/sys/kernel/sched_group_upmigrate
+echo 85 > /proc/sys/kernel/sched_group_downmigrate
+echo 100 > /proc/sys/kernel/sched_group_upmigrate
 
 # Bring up all cores online
 echo 1 > /sys/devices/system/cpu/cpu1/online
@@ -145,6 +154,15 @@ echo 1 > /sys/devices/system/cpu/cpu4/online
 echo 1 > /sys/devices/system/cpu/cpu5/online
 echo 1 > /sys/devices/system/cpu/cpu6/online
 echo 1 > /sys/devices/system/cpu/cpu7/online
+
+# Enable core control
+echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
+echo 68 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
+echo 40 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
+echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
+echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster
+echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/task_thres
 
 # Set Memory parameters
 configure_memory_parameters
@@ -194,8 +212,7 @@ misc_link=$(ls -l /dev/block/bootdevice/by-name/misc)
 real_path=${misc_link##*>}
 setprop persist.vendor.mmi.misc_dev_path $real_path
 
-# wait for bootup 
-sleep 60
-echo sta > /sys/module/wlan/parameters/fwpath
-now=$(date)
-echo "Post boot script executed successfully: time: $now" > /sdcard/.primawlan
+wifi_hal=$(find /vendor/lib64 /vendor/lib -name "libwifi-hal.so" | head -n 1)
+if grep -q "pronto_wlan.ko" $wifi_hal; then
+    echo sta > /sys/module/wlan/parameters/fwpath
+fi
