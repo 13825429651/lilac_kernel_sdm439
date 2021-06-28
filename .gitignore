@@ -135,7 +135,6 @@ Android.bp
 build.sh
 *.zip
 /clang
-/AnyKernel3
 /gcc
 /gcc32
 /sdclang
