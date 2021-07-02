@@ -54,7 +54,7 @@ function compile() {
         finerr
         exit 1
     fi
-    cp out/arch/arm64/boot/Image AnyKernel3
+    cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3
 }
 # Zipping
 function zipping() {
