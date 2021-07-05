@@ -39,7 +39,7 @@ struct blk_flush_queue;
 struct pr_ops;
 
 #define BLKDEV_MIN_RQ	4
-#define BLKDEV_MAX_RQ	32	/* we have a slow storage emmc 5.1*/
+#define BLKDEV_MAX_RQ	64	/* we have a slow storage emmc 5.1*/
 
 /*
  * Maximum number of blkcg policies allowed to be registered concurrently.
