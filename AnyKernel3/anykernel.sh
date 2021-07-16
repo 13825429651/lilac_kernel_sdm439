@@ -4,7 +4,7 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=
+kernel.string=Chaeyoung Kernel V2
 do.devicecheck=1
 do.modules=1
 do.systemless=0
@@ -14,7 +14,7 @@ device.name1=pine
 device.name2=olive
 device.name3=olivelite
 device.name4=olivewood
-supported.versions=10,11
+supported.versions=10,11,12
 supported.patchlevels=
 '; } # end properties
 
@@ -36,8 +36,13 @@ mount -o rw,remount /vendor
 
 vndk_version=$(file_getprop /vendor/build.prop ro.vendor.build.version.sdk)
 
-# Add VNDK version to cmdline
-patch_cmdline "sdm439_vndk_version" "sdm439_vndk_version=$vndk_version"
+if [ $vndk_version -lt 30 ]; then
+    # Add legacy_omx param if VNDK < 30
+    patch_cmdline "legacy_omx" "legacy_omx"
+else
+    # Remove legacy_omx param if VNDK => 30
+    patch_cmdline "legacy_omx" ""
+fi
 
 flash_boot;
 flash_dtbo;
@@ -92,7 +97,4 @@ patch_prop /system/build.prop "iorapd.readahead.enable" "true"
 # Replace post_boot with ours.
 ui_print "Pushing init.qcom.post_boot.sh..."
 replace_file "/vendor/bin/init.qcom.post_boot.sh" "0755" "init.qcom.post_boot.sh"
-# Replace msm_irqbalance.conf with ours.
-ui_print "Pushing msm_irqbalance.conf..."
-replace_file "/vendor/etc/msm_irqbalance.conf" "0644" "msm_irqbalance.conf"
 ## end install

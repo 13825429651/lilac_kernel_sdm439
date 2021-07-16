@@ -83,7 +83,7 @@ function configure_memory_parameters() {
     # Set allocstall_threshold to 0 for all targets.
     # Set swappiness to 100 for all targets
     echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
-    echo 160 > /proc/sys/vm/not_swappiness
+    echo 100 > /proc/sys/vm/swappiness
 
     # Disable wsf for all targets beacause we are using efk.
     # wsf Range : 1..1000 So set to bare minimum value 1.
@@ -133,9 +133,6 @@ echo -6 > /sys/devices/system/cpu/cpu5/sched_load_boost
 echo -6 > /sys/devices/system/cpu/cpu6/sched_load_boost
 echo -6 > /sys/devices/system/cpu/cpu7/sched_load_boost
 
-# Set the default IRQ affinity to the silver cluster.
-echo 0f > /proc/irq/default_smp_affinity
-    
 # Setting b.L scheduler parameters (perform it twice)
 echo 65 > /proc/sys/kernel/sched_downmigrate
 echo 71 > /proc/sys/kernel/sched_upmigrate
